@@ -1,0 +1,10 @@
+/*.sln
+*.suo
+*.opensdf
+*.sdf
+
+/Binaries/**
+/Intermediate/**
+/Saved/**
+
+
