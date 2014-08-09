@@ -17,6 +17,20 @@ class ATutorialCodeCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	TSubobjectPtr<class UCameraComponent> FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Power)
+	TSubobjectPtr<class USphereComponent> CollectionSphere;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Power)
+	float PowerLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Power)
+	float SpeedFactor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Power)
+	float BaseSpeed;
+
+	virtual void Tick(float DeltaSeconds) override;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -26,6 +40,12 @@ class ATutorialCodeCharacter : public ACharacter
 	float BaseLookUpRate;
 
 protected:
+
+	UFUNCTION(BlueprintCallable, Category = Power)
+	void CollectionBatteries();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Power )
+	void PowerUp(float BatteryPower);
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);

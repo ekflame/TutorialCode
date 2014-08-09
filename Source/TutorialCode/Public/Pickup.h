@@ -18,5 +18,5 @@ class APickup : public AActor
 	TSubobjectPtr<UStaticMeshComponent> PickupMesh;
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnPickUp();
+	void OnPickedUp();
 };

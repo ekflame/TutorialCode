@@ -2,6 +2,7 @@
 
 #include "TutorialCode.h"
 #include "TutorialCodeCharacter.h"
+#include "BaterryPickup.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ATutorialCodeCharacter
@@ -9,6 +10,14 @@
 ATutorialCodeCharacter::ATutorialCodeCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
+	PowerLevel = 2000.0f;
+	SpeedFactor = 0.75f;
+	BaseSpeed = 10.0f;
+
+	CollectionSphere = PCIP.CreateDefaultSubobject<USphereComponent>(this, TEXT("CollectionSphere"));
+	CollectionSphere->AttachTo(RootComponent);
+	CollectionSphere->SetSphereRadius(200.0f);
+
 	// Set size for collision capsule
 	CapsuleComponent->InitCapsuleSize(42.f, 96.0f);
 
@@ -50,6 +59,7 @@ void ATutorialCodeCharacter::SetupPlayerInputComponent(class UInputComponent* In
 	// Set up gameplay key bindings
 	check(InputComponent);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	InputComponent->BindAction("CollectPickups", IE_Pressed, this, &ATutorialCodeCharacter::CollectionBatteries);
 
 	InputComponent->BindAxis("MoveForward", this, &ATutorialCodeCharacter::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ATutorialCodeCharacter::MoveRight);
@@ -115,4 +125,35 @@ void ATutorialCodeCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void ATutorialCodeCharacter::CollectionBatteries()
+{
+	float BateeryPower = 0.0f;
+
+	TArray<AActor*> CollectedActors;
+	CollectionSphere->GetOverlappingActors(CollectedActors);
+
+	for (int32 i = 0; i < CollectedActors.Num(); ++i)
+	{
+		ABaterryPickup * const TestBattery = Cast<ABaterryPickup>(CollectedActors[i]);
+
+		if (TestBattery && !TestBattery->IsPendingKill() && TestBattery->bIsActive)
+		{
+			BateeryPower += TestBattery->PowerLevel;
+			TestBattery->OnPickedUp();
+			TestBattery->bIsActive = false;
+		}
+	}
+
+	if (BateeryPower>0.0f)
+	{
+		PowerUp(BateeryPower);
+	}
+}
+
+void ATutorialCodeCharacter::Tick(float deltaSeconds)
+{
+	Super::Tick(deltaSeconds);
+	CharacterMovement->MaxWalkSpeed = SpeedFactor * PowerLevel + BaseSpeed;
 }

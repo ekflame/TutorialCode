@@ -14,7 +14,7 @@ APickup::APickup(const class FPostConstructInitializeProperties& PCIP) : Super(P
 	PickupMesh->AttachTo(RootComponent);
 }
 
-void APickup::OnPickUp_Implementation()
+void APickup::OnPickedUp_Implementation()
 {
 	
 }
