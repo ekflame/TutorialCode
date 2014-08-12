@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameFramework/Actor.h"
+#include "Pickup.h"
 #include "Spawnvolume.generated.h"
 
 UCLASS()
@@ -12,12 +12,16 @@ class ASpawnVolume: public AActor
 	TSubobjectPtr<UBoxComponent> WhereToSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawnning)
+	TSubclassOf<APickup> WhatToSpawn;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawnning)
 	float SpawnDelayRangeLow;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawnning)
 	float SpawnDelayRangeHigh;
 
-	UPROPERTY(BlueprintPure, Category = Spawnning)
+	UFUNCTION(BlueprintPure, Category = Spawnning)
 	FVector GetRandomPointInVolume();
 
 	virtual void Tick(float deltaTime) override;

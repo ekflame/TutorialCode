@@ -17,7 +17,7 @@ ASpawnVolume::ASpawnVolume(const class FPostConstructInitializeProperties& PCIP)
 
 void ASpawnVolume::SpawnPickup()
 {
-	if (WhereToSpawn != NULL)
+	if (WhatToSpawn != NULL)
 	{
 		UWorld * const World = GetWorld();
 		if (World)
@@ -33,7 +33,7 @@ void ASpawnVolume::SpawnPickup()
 			SpawnRotation.Pitch = FMath::FRand() * 360.0f;
 			SpawnRotation.Roll = FMath::FRand() * 360.0f;
 
-			APickup * const SpawnedPickup = World->SpawnActor<ABaterryPickup()>(WhereToSpawn, SpawnRotation, SpawnParams);
+			APickup * const SpawnedPickup = World->SpawnActor<APickup>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 		}
 	}
 }
